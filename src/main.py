@@ -136,8 +136,9 @@ def ejecutar_menu():
         estado="En planificación"
     ))
     
+    # Actualizar contador_id basado en los proyectos existentes
     global contador_id
-    contador_id = 3
+    contador_id = max(p.id for p in proyectos) + 1 if proyectos else 1
     
     while True:
         try:
