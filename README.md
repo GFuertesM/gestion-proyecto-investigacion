@@ -104,4 +104,4 @@ Para más detalles sobre los objetivos, requisitos y mejoras futuras, consulta e
 
 Este proyecto está en fase inicial de desarrollo y utiliza Python estándar sin dependencias externas.
 
-## Autor: Gabriel Fuertes Muñoz - EUPT - Unizar.
+## :godmode: Autor: Gabriel Fuertes Muñoz - EUPT - Unizar.
