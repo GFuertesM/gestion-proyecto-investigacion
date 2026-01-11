@@ -258,6 +258,222 @@ def añadir_proyecto():
         print(f"\n❌ Error al añadir proyecto: {e}")
 
 
+def editar_proyecto():
+    """
+    Edita un proyecto existente.
+    """
+    if not proyectos:
+        print("\n📋 No hay proyectos registrados para editar.")
+        return
+    
+    print("\n" + "="*80)
+    print("✏️  EDITAR PROYECTO")
+    print("="*80)
+    
+    listar_proyectos()
+    
+    try:
+        id_str = input("\nIngrese el ID del proyecto a editar: ").strip()
+        if not id_str:
+            print("❌ Operación cancelada.")
+            return
+        
+        try:
+            id_proyecto = int(id_str)
+        except ValueError:
+            print("❌ Error: El ID debe ser un número entero.")
+            return
+        
+        # Buscar el proyecto
+        proyecto = None
+        for p in proyectos:
+            if p.id == id_proyecto:
+                proyecto = p
+                break
+        
+        if not proyecto:
+            print(f"❌ Error: No se encontró un proyecto con ID {id_proyecto}.")
+            return
+        
+        print(f"\nProyecto seleccionado: {proyecto}")
+        print("\n" + "-"*80)
+        print("Deje en blanco para mantener el valor actual")
+        print("-"*80)
+        
+        # Editar título
+        nuevo_titulo = input(f"Nuevo título [{proyecto.titulo}]: ").strip()
+        if nuevo_titulo:
+            proyecto.titulo = nuevo_titulo
+        
+        # Editar investigador principal
+        nuevo_investigador = input(f"Nuevo investigador principal [{proyecto.investigador_principal}]: ").strip()
+        if nuevo_investigador:
+            proyecto.investigador_principal = nuevo_investigador
+        
+        # Editar fecha de inicio
+        fecha_actual_str = proyecto.fecha_inicio.strftime("%d/%m/%Y") if isinstance(proyecto.fecha_inicio, datetime) else str(proyecto.fecha_inicio)
+        nueva_fecha_str = input(f"Nueva fecha de inicio (dd/mm/aaaa) [{fecha_actual_str}]: ").strip()
+        if nueva_fecha_str:
+            try:
+                proyecto.fecha_inicio = datetime.strptime(nueva_fecha_str, "%d/%m/%Y")
+            except ValueError:
+                print("⚠️  Formato de fecha incorrecto. Manteniendo fecha actual.")
+        
+        # Editar estado
+        print("\nEstados disponibles:")
+        print("1. En planificación")
+        print("2. En curso")
+        print("3. Completado")
+        print("4. Cancelado")
+        
+        estado_opcion = input(f"Seleccione nuevo estado [1-4] [{proyecto.estado}]: ").strip()
+        estados = {
+            "1": "En planificación",
+            "2": "En curso",
+            "3": "Completado",
+            "4": "Cancelado"
+        }
+        
+        if estado_opcion in estados:
+            proyecto.estado = estados[estado_opcion]
+        
+        print(f"\n✅ Proyecto actualizado exitosamente:")
+        print(f"   {proyecto}")
+        
+        # Guardar inmediatamente
+        guardar_proyectos()
+        
+    except KeyboardInterrupt:
+        print("\n\n❌ Operación cancelada.")
+    except Exception as e:
+        print(f"\n❌ Error al editar proyecto: {e}")
+
+
+def eliminar_proyecto():
+    """
+    Elimina un proyecto de la lista.
+    """
+    if not proyectos:
+        print("\n📋 No hay proyectos registrados para eliminar.")
+        return
+    
+    print("\n" + "="*80)
+    print("🗑️  ELIMINAR PROYECTO")
+    print("="*80)
+    
+    listar_proyectos()
+    
+    try:
+        id_str = input("\nIngrese el ID del proyecto a eliminar: ").strip()
+        if not id_str:
+            print("❌ Operación cancelada.")
+            return
+        
+        try:
+            id_proyecto = int(id_str)
+        except ValueError:
+            print("❌ Error: El ID debe ser un número entero.")
+            return
+        
+        # Buscar el proyecto
+        proyecto = None
+        for p in proyectos:
+            if p.id == id_proyecto:
+                proyecto = p
+                break
+        
+        if not proyecto:
+            print(f"❌ Error: No se encontró un proyecto con ID {id_proyecto}.")
+            return
+        
+        print(f"\nProyecto seleccionado: {proyecto}")
+        confirmacion = input("\n⚠️  ¿Está seguro de eliminar este proyecto? (s/n): ").strip().lower()
+        
+        if confirmacion == 's' or confirmacion == 'si':
+            proyectos.remove(proyecto)
+            print(f"\n✅ Proyecto eliminado exitosamente.")
+            
+            # Guardar inmediatamente
+            guardar_proyectos()
+        else:
+            print("\n❌ Eliminación cancelada.")
+    
+    except KeyboardInterrupt:
+        print("\n\n❌ Operación cancelada.")
+    except Exception as e:
+        print(f"\n❌ Error al eliminar proyecto: {e}")
+
+
+def cambiar_estado_proyecto():
+    """
+    Cambia el estado de un proyecto existente.
+    """
+    if not proyectos:
+        print("\n📋 No hay proyectos registrados para cambiar estado.")
+        return
+    
+    print("\n" + "="*80)
+    print("🔄 CAMBIAR ESTADO DE PROYECTO")
+    print("="*80)
+    
+    listar_proyectos()
+    
+    try:
+        id_str = input("\nIngrese el ID del proyecto: ").strip()
+        if not id_str:
+            print("❌ Operación cancelada.")
+            return
+        
+        try:
+            id_proyecto = int(id_str)
+        except ValueError:
+            print("❌ Error: El ID debe ser un número entero.")
+            return
+        
+        # Buscar el proyecto
+        proyecto = None
+        for p in proyectos:
+            if p.id == id_proyecto:
+                proyecto = p
+                break
+        
+        if not proyecto:
+            print(f"❌ Error: No se encontró un proyecto con ID {id_proyecto}.")
+            return
+        
+        print(f"\nProyecto seleccionado: {proyecto}")
+        print(f"Estado actual: {proyecto.estado}")
+        
+        print("\nEstados disponibles:")
+        print("1. En planificación")
+        print("2. En curso")
+        print("3. Completado")
+        print("4. Cancelado")
+        
+        estado_opcion = input("\nSeleccione nuevo estado [1-4]: ").strip()
+        estados = {
+            "1": "En planificación",
+            "2": "En curso",
+            "3": "Completado",
+            "4": "Cancelado"
+        }
+        
+        if estado_opcion in estados:
+            estado_anterior = proyecto.estado
+            proyecto.estado = estados[estado_opcion]
+            print(f"\n✅ Estado actualizado: '{estado_anterior}' → '{proyecto.estado}'")
+            
+            # Guardar inmediatamente
+            guardar_proyectos()
+        else:
+            print("❌ Opción inválida. No se realizaron cambios.")
+    
+    except KeyboardInterrupt:
+        print("\n\n❌ Operación cancelada.")
+    except Exception as e:
+        print(f"\n❌ Error al cambiar estado: {e}")
+
+
 def mostrar_menu():
     """
     Muestra el menú principal del sistema.
@@ -267,7 +483,10 @@ def mostrar_menu():
     print("="*80)
     print("\n1. 📋 Listar proyectos")
     print("2. ➕ Añadir nuevo proyecto")
-    print("3. 🚪 Salir")
+    print("3. ✏️  Editar proyecto")
+    print("4. 🗑️  Eliminar proyecto")
+    print("5. 🔄 Cambiar estado de proyecto")
+    print("6. 🚪 Salir")
     print("\n" + "-"*80)
 
 
@@ -315,18 +534,24 @@ def ejecutar_menu():
     while True:
         try:
             mostrar_menu()
-            opcion = input("Seleccione una opción [1-3]: ").strip()
+            opcion = input("Seleccione una opción [1-6]: ").strip()
             
             if opcion == "1":
                 listar_proyectos()
             elif opcion == "2":
                 añadir_proyecto()
             elif opcion == "3":
+                editar_proyecto()
+            elif opcion == "4":
+                eliminar_proyecto()
+            elif opcion == "5":
+                cambiar_estado_proyecto()
+            elif opcion == "6":
                 print("\n👋 ¡Hasta luego! Gracias por usar el sistema.")
                 detener_autoguardado()
                 break
             else:
-                print("\n❌ Opción inválida. Por favor, seleccione 1, 2 o 3.")
+                print("\n❌ Opción inválida. Por favor, seleccione 1, 2, 3, 4, 5 o 6.")
         
         except KeyboardInterrupt:
             print("\n\n👋 ¡Hasta luego! Gracias por usar el sistema.")
