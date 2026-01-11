@@ -24,6 +24,30 @@ ARCHIVO_DATOS = os.path.join(os.path.dirname(__file__), "proyectos.json")
 autoguardado_activo = True
 hilo_autoguardado = None
 
+# Estados disponibles para proyectos
+ESTADOS_PROYECTO = {
+    "1": "En planificación",
+    "2": "En curso",
+    "3": "Completado",
+    "4": "Cancelado"
+}
+
+
+def buscar_proyecto_por_id(id_proyecto):
+    """
+    Busca un proyecto por su ID.
+    
+    Args:
+        id_proyecto (int): ID del proyecto a buscar
+    
+    Returns:
+        Proyecto|None: El proyecto encontrado o None si no existe
+    """
+    for proyecto in proyectos:
+        if proyecto.id == id_proyecto:
+            return proyecto
+    return None
+
 
 def guardar_proyectos():
     """
@@ -224,15 +248,8 @@ def añadir_proyecto():
         print("4. Cancelado")
         
         estado_opcion = input("Seleccione estado [1-4, Enter para 'En planificación']: ").strip()
-        estados = {
-            "1": "En planificación",
-            "2": "En curso",
-            "3": "Completado",
-            "4": "Cancelado",
-            "": "En planificación"
-        }
-        
-        estado = estados.get(estado_opcion, "En planificación")
+        estado = ESTADOS_PROYECTO.get(estado_opcion, "En planificación") if estado_opcion else "En planificación"
+
         
         # Crear el nuevo proyecto
         nuevo_proyecto = Proyecto(
@@ -285,11 +302,7 @@ def editar_proyecto():
             return
         
         # Buscar el proyecto
-        proyecto = None
-        for p in proyectos:
-            if p.id == id_proyecto:
-                proyecto = p
-                break
+        proyecto = buscar_proyecto_por_id(id_proyecto)
         
         if not proyecto:
             print(f"❌ Error: No se encontró un proyecto con ID {id_proyecto}.")
@@ -327,15 +340,9 @@ def editar_proyecto():
         print("4. Cancelado")
         
         estado_opcion = input(f"Seleccione nuevo estado [1-4] [{proyecto.estado}]: ").strip()
-        estados = {
-            "1": "En planificación",
-            "2": "En curso",
-            "3": "Completado",
-            "4": "Cancelado"
-        }
         
-        if estado_opcion in estados:
-            proyecto.estado = estados[estado_opcion]
+        if estado_opcion in ESTADOS_PROYECTO:
+            proyecto.estado = ESTADOS_PROYECTO[estado_opcion]
         
         print(f"\n✅ Proyecto actualizado exitosamente:")
         print(f"   {proyecto}")
@@ -376,11 +383,7 @@ def eliminar_proyecto():
             return
         
         # Buscar el proyecto
-        proyecto = None
-        for p in proyectos:
-            if p.id == id_proyecto:
-                proyecto = p
-                break
+        proyecto = buscar_proyecto_por_id(id_proyecto)
         
         if not proyecto:
             print(f"❌ Error: No se encontró un proyecto con ID {id_proyecto}.")
@@ -389,7 +392,7 @@ def eliminar_proyecto():
         print(f"\nProyecto seleccionado: {proyecto}")
         confirmacion = input("\n⚠️  ¿Está seguro de eliminar este proyecto? (s/n): ").strip().lower()
         
-        if confirmacion == 's' or confirmacion == 'si':
+        if confirmacion in ['s', 'si', 'sí', 'yes', 'y']:
             proyectos.remove(proyecto)
             print(f"\n✅ Proyecto eliminado exitosamente.")
             
@@ -431,11 +434,7 @@ def cambiar_estado_proyecto():
             return
         
         # Buscar el proyecto
-        proyecto = None
-        for p in proyectos:
-            if p.id == id_proyecto:
-                proyecto = p
-                break
+        proyecto = buscar_proyecto_por_id(id_proyecto)
         
         if not proyecto:
             print(f"❌ Error: No se encontró un proyecto con ID {id_proyecto}.")
@@ -451,16 +450,10 @@ def cambiar_estado_proyecto():
         print("4. Cancelado")
         
         estado_opcion = input("\nSeleccione nuevo estado [1-4]: ").strip()
-        estados = {
-            "1": "En planificación",
-            "2": "En curso",
-            "3": "Completado",
-            "4": "Cancelado"
-        }
         
-        if estado_opcion in estados:
+        if estado_opcion in ESTADOS_PROYECTO:
             estado_anterior = proyecto.estado
-            proyecto.estado = estados[estado_opcion]
+            proyecto.estado = ESTADOS_PROYECTO[estado_opcion]
             print(f"\n✅ Estado actualizado: '{estado_anterior}' → '{proyecto.estado}'")
             
             # Guardar inmediatamente
