@@ -14,6 +14,13 @@
       "investigador_principal": "Dra. María González",
       "fecha_inicio": "2025-03-01T00:00:00",
       "estado": "En planificación"
+    },
+    {
+      "id": 3,
+      "titulo": "Análisis de tormentas solares en época estival en el hemisferio Norte.",
+      "investigador_principal": "Dr. Gabriel Fuertes Muñoz",
+      "fecha_inicio": "2026-01-11T01:44:25.456579",
+      "estado": "En curso"
     }
   ]
 }
